@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MOCK</title>
+<script type="text/javascript" th:src="@{/layui/layui.js}"></script>
+<script type="text/javascript" th:src="@{/jquery-3.3.1/jquery-3.3.1.js}"></script>
+<script type="text/javascript" th:src="@{/layui/uifunc/common.js}"></script>
+<script type="text/javascript" th:src="@{/layui/uifunc/cache.js}"></script>
+
+<link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+<link rel="stylesheet" th:href="@{/layui/outside/css/style.css}"
+	media="all">
+<link rel="stylesheet" th:href="@{/layui/skin/myskin.css}">
+
+</head>
+
+<body>
+	<canvas id="canvas"></canvas>
+	<div class="layui-container">
+
+		<div class="layui-row">
+			<div class="layui-col-md12">
+				<div id="global" hidden>
+					<table id="globalshow" lay-filter="globalshow"></table>
+				</div>
+				<div id="local" hidden>
+				<br>
+					<form class="layui-form" lay-filter="localform" action="">
+						<div class="layui-form-item">
+							<label class="layui-form-label">IP</label>
+							<div class="layui-input-block">
+								<input type="text" name="ip" required lay-verify="required"
+									placeholder="请输入Ip" autocomplete="off" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">端口</label>
+							<div class="layui-input-inline">
+								<input type="text" name="port" required
+									lay-verify="required" placeholder="请输入端口" autocomplete="off"
+									class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">域名</label>
+							<div class="layui-input-inline">
+								<input type="text" name="dns" required
+									lay-verify="required" placeholder="请输入域名" autocomplete="off"
+									class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">是否代理</label>
+							<div class="layui-input-block">
+								<input type="checkbox" name="is_proxy" title="代理">
+							</div>
+							<div class="layui-form-item">
+								<div class="layui-input-block">
+									<div class="layui-input-inline">
+								         <button class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius" lay-submit lay-filter="update"><i class="layui-icon">&#xe669;</i></button>
+	                                     <button class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius" lay-submit lay-filter="delete"><i class="layui-icon">&#xe640;</i></button>
+								</div>
+								</div>
+							</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</body>
+<script th:inline="javascript">
+	layui.use([ 'layer', 'form', 'jquery', 'code', 'layedit', 'element',
+			'util', 'carousel','table','laytpl'], function() {
+		//<!-- layui初始化-->
+		var layer = layui.layer, form = layui.form;
+		var element = layui.element;
+		var util = layui.util;
+		var carousel = layui.carousel;
+		var table=layui.table;
+		var laytpl = layui.laytpl;
+		//<!-- 获取布局中的form表单-->
+		var form = layui.form;
+		//<!-- 引入jquery-->
+		var $ = layui.$;
+		//缓存
+		//缓存数据
+		var cachedata=new CacheData('id');
+		//proxy数据
+		var proxydata=[[${proxydata}]];
+		var proxyjson=JSON.parse(proxydata);
+
+		 console.log(proxyjson);
+		//global,local
+		var model='';
+		function querymodel(){
+	        if(proxyjson.url!=null&&proxyjson.url!=''){
+	        	model='local';
+	        }else{
+	        	model='global';
+	        }
+			$('#'+model).show();
+		}
+	
+		//确认模式
+		querymodel();
+		
+		
+		
+		function rendermodelenv(){
+			if(model=='global'){
+				  table.render({
+					    elem: '#globalshow'
+					    ,height: 312
+					    ,toolbar: '#headtool'
+					    ,data:proxyjson.data
+					    ,page: true //开启分页
+					    ,cols: [[ //表头
+					    	 {field: 'id', title: 'id', width:10, sort: true,hide:true,},
+					      {field: 'ip', title: 'IP', width:110, sort: true , edit: 'text'}
+					      ,{field: 'port', title: '端口', width:70, edit: 'text'}
+					      ,{field: 'dns', title: '域名', width:180, sort: true, edit: 'text'}
+					      ,{field: 'is_proxy', title: '是否代理', width:120,templet: '#proxybar', unresize: true} 
+					      ,{fixed: 'right', title: '操作', width:178, align:'center', toolbar: '#opbar'} 
+					    ]]
+					  });
+					  
+			}
+			
+			for(var obj of proxyjson.data){
+				cachedata.adddata(obj);
+			}
+		}
+		//渲染数据
+		rendermodelenv();
+		
+
+		function rendermodellocal(){
+			if(model=='local'){
+				if(proxyjson.data==null||proxyjson.data.length==0){
+					form.val("localform", {
+						  "ip": ""
+						  ,"port": ""
+						  ,"dns": ""
+						  ,"is_proxy": false
+
+						});
+				}else{
+					form.val("localform", {
+						  "ip": proxyjson.data[0].ip
+						  ,"port": proxyjson.data[0].port
+						  ,"dns": proxyjson.data[0].dns
+						  ,"is_proxy": proxyjson.data[0].is_proxy=="true"?true:false
+						});
+				}	  
+			}
+		}
+		rendermodellocal();
+		
+		/*url和req监听*/
+		function localdeal(){
+			 form.on('submit(update)', function(data){
+				    var id;
+				    if(proxyjson.data.length==0){
+				    	id=uuid();
+				    }else{
+				    	id=proxyjson.data[0].id;
+				    }
+				    console.log('is_proxy='+data.field.is_proxy);
+		
+				    var upddata={
+				    	"id":id,
+				    	"url":proxyjson.url,
+				    	"reqid":proxyjson.reqid,
+				    	"ip":data.field.ip,
+				    	"port":data.field.port,
+				    	"dns":data.field.dns,
+				    	"is_proxy":data.field.is_proxy=='on'?'true':'false'
+				    }
+		      		var result=add_mod(upddata);
+				    var x=result.flag==true?updform(upddata,'upd'):2;
+				    return false;
+				  });
+			 form.on('submit(delete)', function(data){
+				   if(proxyjson.data.length==0){
+					   layer.msg('没有数据无需删除');
+				   }else{
+					   var upddata={
+						    	"id":proxyjson.data[0].id,
+						    	"url":proxyjson.url,
+						    	"reqid":proxyjson.reqid,
+						    	"ip":data.field.ip,
+						    	"port":data.field.port,
+						    	"dns":data.field.dns,
+						    	"is_proxy":data.field.is_proxy=='on'?'true':'false'
+						    }
+					   var result=del(upddata);
+					    var x=result.flag==true?updform(upddata,'del'):2;
+				   }
+				    return false;
+				  });
+		}
+		localdeal();
+		
+		/*新增删除修改后更新form以及proxyjson数据*/
+		function updform(upddata,action){
+			if(action=='upd'){
+				if(proxyjson.data.length==0){
+					proxyjson.url=upddata.url;
+					proxyjson.reqid=upddata.reqid;
+					var proxy={
+							"id":upddata.id,
+							"ip":upddata.ip,
+					    	"port":upddata.port,
+					    	"dns":upddata.dns,
+					    	"is_proxy":upddata.is_proxy
+					}
+					proxyjson.data[0]=proxy;
+				}else{
+					proxyjson.url=upddata.url;
+					proxyjson.reqid=upddata.reqid;
+					proxyjson.data[0].id=upddata.id;
+					proxyjson.data[0].ip=upddata.ip;
+					proxyjson.data[0].port=upddata.port;
+					proxyjson.data[0].dns=upddata.dns;
+					proxyjson.data[0].is_proxy=upddata.is_proxy;
+				}
+			}else if(action=='del'){
+				proxyjson.url=upddata.url;
+				proxyjson.reqid=upddata.reqid;
+				proxyjson.data=[];
+				
+				form.val("localform", {
+					  "ip": ""
+					  ,"port": ""
+					  ,"dns": ""
+					  ,"is_proxy": false
+					});
+			}
+			return 0;
+		}
+		
+		
+		function toolbarbind(){
+			//字段工具栏
+			table.on('tool(globalshow)', function(obj){
+			    var data = obj.data;
+			    if(obj.event === 'upd'){
+			    	var upddata=gettablerow(data);
+			    	
+			        var check=updcheck(upddata);
+			        if(check.flag){
+			        	console.log('修改的数据='+upddata.id);
+			        	add_mod(upddata);
+			        }else{
+			        	layer.msg(check.tip);
+			        }
+			    } else if(obj.event === 'del'){
+			      layer.confirm('真的删除行么？', {
+			    	  btn: ['确认', '取消'] 
+			    	  ,
+			    	}, function(index, layero){
+			    		var upddata=gettablerow(data);
+			    		var result=del(upddata);
+			    		if(result.flag){
+			    			console.log('删除的数据='+upddata.id);
+			    			 cachedata.deldata(upddata.id);
+			    			 tablerefresh();
+			    		}
+			    		layer.close(index);
+			    	}, function(index){
+			    		layer.close(index);
+			    	});
+			    	 
+			      
+			    }
+			  
+			  });
+			
+			
+			 table.on('toolbar(globalshow)', function(obj){
+				    var checkStatus = table.checkStatus(obj.config.id);
+				    switch(obj.event){
+				      case 'add':
+				    	  var upddata={
+					        	"id":uuid(),
+					        	"url":"",
+					        	"reqid":"",
+					        	"ip":"",
+					        	"port":"",
+					        	"dns":"",
+					        	"is_proxy":"false"
+					        }
+				    	  cachedata.adddata(upddata);
+				    	  tablerefresh();
+				    
+				    		 
+				      break;
+				      
+				    }; });
+			
+			form.on('checkbox(is_proxy_lock)', function(obj){
+				  if(this.value=='false'){
+					  this.value='true';
+				  }
+				  else if(this.value=='true'){
+					  this.value='false';
+				  }
+
+		});
+		}
+		//工具条绑定
+		toolbarbind();
+		
+		
+		//缓存转表数据
+		function tablecache(){
+			var data=[];
+			for(var i of cachedata.cahce_list){
+				if(i!=cachedata.nullobj){
+				data.push(i);
+				}
+			}
+		
+			return data;
+		}
+		//表格刷新
+		function tablerefresh(){
+			  table.reload('globalshow', {
+	    		  data: tablecache()
+	    		});
+		}
+		//更新操作字段校验
+		function updcheck(upddata){
+			var result={
+					"flag":true,
+					"tip":""
+			}
+			if(upddata.ip==""){
+				result.flag=false;
+				result.tip="IP不能为空"
+				return result;
+			}
+			if(upddata.port==""){
+				result.flag=false;
+				result.tip="端口不能为空"
+				return result;
+			}
+			return result;
+		}
+		
+		//获得表格行对象
+		function gettablerow(data){
+			var upddata={
+		        	"id":data.id,
+		        	"url":proxyjson.url,
+		        	"reqid":proxyjson.reqid,
+		        	"ip":data.ip,
+		        	"port":data.port,
+		        	"dns":data.dns,
+		        	"is_proxy":$('#proxys'+data.id).val()
+		        }
+			return upddata;
+		}
+		//新增修改接口
+		function add_mod(upddata){
+			var result={
+					"flag":true,
+					"tip":""
+			}
+			  $.ajax({          
+		            url:"/mock/upd_proxy",
+		            contentType: "application/json;charset=utf-8",
+		            type:"post", 
+		            async: false,
+		            data:JSON.stringify(upddata),
+		            success:function(data){
+		            	if(data.flag=='success'){
+		            		cachedata.moddata(upddata);
+		            		result.flag=true;
+		            	}else{
+		            		result.flag=false;
+		            	}
+		         	  layer.msg(data.info);
+		            },
+		            error:function(xhr,state,errorThrown){
+		            	result.flag=false;
+		            	layer.msg(errorThrown);
+		            }
+		 	   });
+			return result;
+		}
+		
+		//删除接口
+		function del(upddata){
+			var result={
+					"flag":true,
+					"tip":""
+			}
+			$.ajax({          
+	            url:"/mock/del_proxy",
+	            contentType: "application/json;charset=utf-8",
+	            type:"post", 
+	            async: false,
+	            data:JSON.stringify(upddata),
+	            success:function(data){
+	            	if(data.flag=='success'){
+	            		result.flag=true;
+	            	}else{
+	            		result.flag=false;
+	            	}
+	         	  layer.msg(data.info);
+	            },
+	            error:function(xhr,state,errorThrown){
+	            	result.flag=false;
+	            	layer.msg(state);
+	            }
+	 	   });
+			return result;
+		}
+		
+	});
+	
+	
+
+</script>
+
+<!-- 工具条 -->
+<script type="text/html" id="proxybar">
+ 
+ {{#  if(d.is_proxy =='false'){ }}
+   <input id="proxys{{d.id}}" type="checkbox"  name="is_proxy_lock" value="{{d.is_proxy}}" title="代理" lay-filter="is_proxy_lock">
+  {{#  } }}
+ {{#  if(d.is_proxy =='true'){ }}
+   <input id="proxys{{d.id}}" type="checkbox"  checked name="is_proxy_lock" value="{{d.is_proxy}}" title="代理" lay-filter="is_proxy_lock">
+  {{#  } }}
+</script>
+<script type="text/html" id="opbar">
+  <a class="layui-btn layui-btn-xs" lay-event="upd">更新</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+
+<script type="text/html" id="headtool">
+  <div class="layui-btn-container">
+    <a class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" lay-event="add"><i class="layui-icon">&#xe608;</i></a>
+  </div>
+</script>
+
+
+</html>
