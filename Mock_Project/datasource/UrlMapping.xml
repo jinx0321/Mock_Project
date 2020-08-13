@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ROOT>
     <UrlData>
-        <Data>31231412</Data>
-        <Forward_Addr></Forward_Addr>
-        <Is_Forward>false</Is_Forward>
-        <Request_Data>
-            <Data>1</Data>
-            <Is_Disable>false</Is_Disable>
-            <Param>1</Param>
-            <ParamId>1595571409797</ParamId>
-        </Request_Data>
-        <Request_Data>
-            <Data>2</Data>
-            <Is_Disable>true</Is_Disable>
-            <Param>1</Param>
-            <ParamId>1595571410064</ParamId>
-            <Proxy>
-                <dns>4</dns>
-                <id>157a3820e9d54d958cab1943e55fcd80</id>
-                <ip>1</ip>
-                <is_proxy>true</is_proxy>
-                <port>3</port>
-            </Proxy>
-        </Request_Data>
-        <Request_Data>
-            <Data>4124</Data>
-            <Is_Disable>true</Is_Disable>
-            <Param>12</Param>
-            <ParamId>1595574248680</ParamId>
-        </Request_Data>
-        <Request_Data>
-            <Data>124</Data>
-            <Is_Disable>false</Is_Disable>
-            <Param>123</Param>
-            <ParamId>1595574319115</ParamId>
-            <Proxy>
-                <dns>152</dns>
-                <id>f9fc6c9207cf43408bd0db63d93e2646</id>
-                <ip>142</ip>
-                <is_proxy>true</is_proxy>
-                <port>51</port>
-            </Proxy>
-        </Request_Data>
-        <Url>/21312</Url>
+        <Data>{
+	"data": [
+		{
+			"real_inst_id": "0",
+			"mac": "",
+			"tenant_name": "",
+			"lan_ip": "",
+			"kind_name": "",
+			"user_token": "203a431d-0860-4c2a-a44f-8f2be926a12e1",
+			"operator_name": "jinx_yn77",
+			"user_type": "0",
+			"session_id": "",
+			"opt_auths": {},
+			"error_info": "login success",
+			"operator_code": "jinx_yn77",
+			"wan_ip": "",
+			"session_timeout": 12000000,
+			"env_name": "",
+			"error_no": "0",
+			"istemporary": "0",
+			"op_user_type": "0",
+			"ip_addr": "",
+			"customer_id": "0",
+			"env_id": "001",
+			"system_no": "",
+			"operator_auth": "true",
+			"nick_name": "jinx_yn77",
+			"last_login_date_time": "2020-08-03 16:17:45",
+			"return_code": "0",
+			"org_name": "yntest",
+			"return_info": "login success",
+			"org_code": "yntest",
+			"certificate_type": "",
+			"inst_id": "1111",
+			"sso_org_code": "",
+			"tenant_id": "",
+			"redirect_uri": "",
+			"operator_no": 94
+		}
+	]
+}</Data>
+        <Url>/g/hsxone.omc/v/submitLogin</Url>
     </UrlData>
 </ROOT>
