@@ -1,9 +1,22 @@
 /**
  * 公共方法区
+
  * @param i
  * @param obj
  * @returns
  */
+
+String.prototype.hashCode = function() {
+  var hash = 0, i, chr;
+  if (this.length === 0) return hash;
+  for (i = 0; i < this.length; i++) {
+    chr   = this.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
+
 /*全局代理*/
 //获取当前url的代理
 function getproxy( url, reqid){
@@ -70,17 +83,17 @@ function addurlui(obj,i,form){
 	 var urldata=urld.replace(/\//g,slash);
 	 var is_forward=obj.is_Forward;
 	 var forward_addr=obj.forward_Addr;
-	 var divid=urld.replace(/\//g,"_")+'divid_';
-	 var textareaid=urld.replace(/\//g,"_")+'textarea_';
-	 var editid=urld.replace(/\//g,"_")+'edit_';
-	 var updateid=urld.replace(/\//g,"_")+'update_';
-	 var deleteid=urld.replace(/\//g,"_")+'delete_';
-	 var isforwardid=urld.replace(/\//g,"_")+'isforward_';
-	 var isforwarddivid=urld.replace(/\//g,"_")+'isforwarddiv_';
-	 var forwardurlid=urld.replace(/\//g,"_")+'forwardurl_';
-	 var forwardurldivid=urld.replace(/\//g,"_")+'forwardurldiv_';
-	 var specialid=urld.replace(/\//g,"_")+'specialid_';
-	 var proxyid=urld.replace(/\//g,"_")+'proxyid_';
+	 var divid=urld.replace(/\//g,"_").hashCode()+'divid_';
+	 var textareaid=urld.replace(/\//g,"_").hashCode()+'textarea_';
+	 var editid=urld.replace(/\//g,"_").hashCode()+'edit_';
+	 var updateid=urld.replace(/\//g,"_").hashCode()+'update_';
+	 var deleteid=urld.replace(/\//g,"_").hashCode()+'delete_';
+	 var isforwardid=urld.replace(/\//g,"_").hashCode()+'isforward_';
+	 var isforwarddivid=urld.replace(/\//g,"_").hashCode()+'isforwarddiv_';
+	 var forwardurlid=urld.replace(/\//g,"_").hashCode()+'forwardurl_';
+	 var forwardurldivid=urld.replace(/\//g,"_").hashCode()+'forwardurldiv_';
+	 var specialid=urld.replace(/\//g,"_").hashCode()+'specialid_';
+	 var proxyid=urld.replace(/\//g,"_").hashCode()+'proxyid_';
 	 var action={
 			"url":urld,
 	    		"divid":divid,
