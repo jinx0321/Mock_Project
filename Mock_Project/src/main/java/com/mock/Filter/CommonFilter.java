@@ -42,13 +42,13 @@ public class CommonFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		    HttpServletRequest httpRequest = (HttpServletRequest)request;
-	        HttpServletResponseWrapper httpResponse = new HttpServletResponseWrapper((HttpServletResponse) response);
-	        String status=LocalFilter.commonfilter(httpRequest) ;
-	       
+	        HttpServletResponse httpResponse = ((HttpServletResponse) response);
+	        String status=LocalFilter.commonfilter(httpRequest);
+	        //判断访问服务自身url
 	        if(status.equals(LocalFilter.release)) {
 	    	   JumpService.release(request, response, chain);
 	        }else if(status.equals(LocalFilter.forward)){
-	    	   JumpService.forward(httpRequest, httpRequest, httpResponse);
+	    	   JumpService.forward(httpRequest, httpResponse);
 	         }
 	        return;
 	    }

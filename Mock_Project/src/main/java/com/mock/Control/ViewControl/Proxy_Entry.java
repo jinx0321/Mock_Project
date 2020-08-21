@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.mock.Bean.Data.RootData;
 import com.mock.Service.URLDealService.UrlDeal;
-import com.mock.Service.URLDealService.CommonInter.CacheOp;
+import com.mock.Service.CacheService.CacheOp;
 import com.mock.Service.ViewService.ProxyViewService;
 import com.mock.Service.ViewService.ViewService;
 import com.mock.Utils.ControlUtils.RequestUtils;

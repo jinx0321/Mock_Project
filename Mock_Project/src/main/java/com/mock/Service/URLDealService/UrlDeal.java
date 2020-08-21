@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import com.mock.Dao.XmlUtils.*;
-import com.mock.Service.URLDealService.CommonInter.CacheOp;
-import com.mock.Service.URLDealService.CommonInter.CacheOpImpl_RootData;
+import com.mock.Service.CacheService.CacheOp;
+import com.mock.Service.CacheService.CacheOpImpl_RootData;
 import com.mock.Bean.Data.RootData;
 import com.mock.Cache.CacheData;
 

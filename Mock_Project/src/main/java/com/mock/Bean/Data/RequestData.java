@@ -1,7 +1,8 @@
 package com.mock.Bean.Data;
 
+import java.util.List;
+import java.util.Map;
 import javax.xml.bind.annotation.XmlElement;
-
 import com.mock.Bean.Proxy.Proxy;
 
 public class RequestData {
@@ -13,6 +14,19 @@ public class RequestData {
 	private String Is_Disable;
 	private Proxy Proxy;
 	private String id;
+	private List<Map<String,String[]>> ParamObject;
+	
+	public void InjectParamObject(List<Map<String,String[]>> ParamObject) {
+		this.ParamObject=ParamObject;
+	}
+	public List<Map<String,String[]>> RequireParamObject() {
+		return this.ParamObject;
+	}
+	public void ClearParamObject() {
+		 this.ParamObject=null;
+	}
+	
+	
 	
 	@XmlElement(name="id")
 	public String getId() {
@@ -65,6 +79,7 @@ public class RequestData {
 	public void setProxy(Proxy proxy) {
 		Proxy = proxy;
 	}
+	
 	@Override
 	public String toString() {
 		return "RequestData [Param=" + Param + ", Is_Forward=" + Is_Forward + ", Data=" + Data + ", ParamId=" + ParamId

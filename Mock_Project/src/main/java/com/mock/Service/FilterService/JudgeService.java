@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import com.mock.Bean.Data.RootData;
 import com.mock.Bean.Data.UrlData;
 import com.mock.Filter.*;
-import com.mock.Service.URLDealService.CommonInter.CacheOp;
-import com.mock.Service.URLDealService.CommonInter.CacheOpImpl_RootData;
+import com.mock.Service.CacheService.CacheOp;
+import com.mock.Service.CacheService.CacheOpImpl_RootData;
 
 /**
  * 判断当前url是什么服务
@@ -49,16 +49,12 @@ public class JudgeService{
 		    	String name=paramenum.nextElement();
 		    	params.put(name, request.getParameter(name));
 		    }
-		    
 			String uri=request.getRequestURI();
-			
 		    for(UrlData ud:CacheOp.GetCache().getUrldata()) {
 		    	if(ud.equals(uri)){
 		    		String x=ud.getRequestData().size()!=0?"":"";
 		    	}
 		    }
-		    
-		
 		return false;
 	}
 	

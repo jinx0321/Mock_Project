@@ -17,10 +17,11 @@ import com.mock.Cache.CacheObject;
 @XmlRootElement(name="ENV")
 public class EnvVar extends CacheObject {
 	
+	private List<Proxy> proxylist=new LinkedList<Proxy>();
+	
 	public EnvVar() {
 		this.type="ENV";
 	}
-	private List<Proxy> proxylist=new LinkedList<Proxy>();
 	
 	@XmlElement(name="EnvData")
 	public List<Proxy> getProxylist() {

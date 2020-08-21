@@ -17,8 +17,8 @@ import com.mock.Bean.Data.EnvVar;
 import com.mock.Bean.Data.RequestData;
 import com.mock.Bean.Data.RootData;
 import com.mock.Bean.Data.UrlData;
-import com.mock.Service.URLDealService.CommonInter.CacheOpImpl_RootData;
-import com.mock.Service.URLDealService.CommonInter.CacheOp;
+import com.mock.Service.CacheService.CacheOpImpl_RootData;
+import com.mock.Service.CacheService.CacheOp;
 import com.mock.Utils.ControlUtils.UrlUtils;
 import com.mock.Bean.Log.Info;
 import com.mock.Cache.CacheData;
@@ -165,6 +165,7 @@ public class ViewService {
 						rdata.setIs_Forward(rd.getIs_Forward());
 						rdata.setParam(rd.getParam());
 						rdata.setIs_Disable(rd.getIs_Disable());
+						rdata.ClearParamObject();
 						is_flag=true;
 					}
 				}

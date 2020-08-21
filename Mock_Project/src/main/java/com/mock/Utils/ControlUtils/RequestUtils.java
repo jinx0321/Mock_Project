@@ -1,8 +1,10 @@
 package com.mock.Utils.ControlUtils;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +54,57 @@ public class RequestUtils {
     
 	}
 	
+	public JSONObject toJsonObject_byte(byte[] reqdata,String Charest){
+	      try {
+	    	   String content=new String(reqdata!=null?reqdata:"".getBytes(),Charest);
+				if(JSON.isValid(content)) {
+					return JSONObject.parseObject(content);
+				}else if(content.contains("&")){
+					Map<String,String[]> params=new HashMap<String, String[]>();
+					String[] kv=content.split("&");
+					for(int i=0;i<kv.length;i++) {
+						if(kv[i].contains("=")){
+							if(kv[i].split("=").length==1) {
+								String[] arrs= {""};
+								params.put(kv[i].split("=")[0], arrs);
+							}else {
+								String[] arrs= {URLDecoder.decode(kv[i].split("=")[1],Charest)};
+								params.put(kv[i].split("=")[0], arrs);
+							}
+						}else {
+							String[] arrs= {kv[i].split("=")[0]};
+							params.put(kv[i].split("=")[0], arrs);
+						}
+					}
+					JSONObject json=new JSONObject();
+					params.forEach((k,v)->{
+						if(v==null||v.length==0) {
+							json.put(k,"");
+						}else if(v.length==1) {
+							json.put(k,v[0]);
+						}else {
+							JSONArray ja=new JSONArray();
+						   for(int i=0;i<v.length;i++) {
+							   ja.add(v[i]);
+						   }
+							json.put(k, ja);
+						}
+						
+					});
+					return json;
+				}else {
+					JSONObject json=new JSONObject();
+					json.put("content", content);
+					return json; 
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+				return new JSONObject();
+			}
+	    
+		
+	}
+	
 	/**
 	 * 备份一份参数
 	 * @param request
@@ -74,7 +127,7 @@ public class RequestUtils {
      * @return
      * @throws IOException
      */
-    private  byte[] getRequestPostBytes(HttpServletRequest request)
+    public  byte[] getRequestPostBytes(HttpServletRequest request)
             throws IOException {
         int contentLength = request.getContentLength();
         if(contentLength<0){

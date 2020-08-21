@@ -29,8 +29,6 @@ public class LocalFilter {
 	
 	
 	public String commonfilter(HttpServletRequest request) {
-		
-		
 		String uri=request.getRequestURI();
 		
 		//最先判断本地url

@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONObject;
 import com.mock.Bean.Data.RootData;
 import com.mock.Bean.Data.UrlData;
 import com.mock.Cache.CacheData;
@@ -39,6 +40,11 @@ public class Mock_Entry {
 	@RequestMapping(value="/mock/data",produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public String common(HttpServletRequest request) {
+		JSONObject json=RequestUtils.toJsonObject(request);
+		System.out.println(json.toJSONString());
+		System.out.println(request.getRequestURI());
+		
+		
 		return UrlDeal.GetUrlData(UrlUtils.UrlParserAfter(request.getParameter("data")));
 	}
 	

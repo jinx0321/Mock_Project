@@ -12,7 +12,7 @@ import com.mock.Bean.Data.RootData;
 import com.mock.Bean.Data.UrlData;
 import com.mock.Bean.Log.Info;
 import com.mock.Bean.Proxy.Proxy;
-import com.mock.Service.URLDealService.CommonInter.CacheOp;
+import com.mock.Service.CacheService.CacheOp;
 
 @Service
 public class ProxyViewService {

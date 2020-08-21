@@ -3,8 +3,8 @@ package com.mock.Init;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.mock.Service.URLDealService.CommonInter.CacheOp;
-import com.mock.Service.URLDealService.CommonInter.CacheOpImpl_RootData;
+import com.mock.Service.CacheService.CacheOp;
+import com.mock.Service.CacheService.CacheOpImpl_RootData;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;

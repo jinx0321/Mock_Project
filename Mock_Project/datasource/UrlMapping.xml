@@ -42,6 +42,29 @@
     }
   ]
 }</Data>
+        <Request_Data>
+            <Data>23</Data>
+            <Is_Disable>true</Is_Disable>
+            <Param>1</Param>
+            <ParamId>1597654018025</ParamId>
+            <Proxy>
+                <dns>3</dns>
+                <id>b6ef4bc88e7d4c5aa76134dc3d8c17a0</id>
+                <ip>1</ip>
+                <is_proxy>false</is_proxy>
+                <port>2</port>
+            </Proxy>
+        </Request_Data>
         <Url>/g/hsxone.omc/v/submitLogin</Url>
+    </UrlData>
+    <UrlData>
+        <Data>3123</Data>
+        <Request_Data>
+            <Data>1231241</Data>
+            <Is_Disable>false</Is_Disable>
+            <Param>a=3,b=4,c.d=5</Param>
+            <ParamId>1597905120888</ParamId>
+        </Request_Data>
+        <Url>/test</Url>
     </UrlData>
 </ROOT>

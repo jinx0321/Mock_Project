@@ -1,4 +1,6 @@
-package com.mock.Service.URLDealService.CommonInter;
+package com.mock.Service.CacheService;
+
+
 
 import java.io.File;
 import java.lang.reflect.Type;

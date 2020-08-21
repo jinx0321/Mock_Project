@@ -15,12 +15,6 @@ public class MockProjectApplication {
 
 	public static void main(String[] args) {
 		ConfigurableApplicationContext context=SpringApplication.run(MockProjectApplication.class, args);
-		
-		String[] names=context.getBeanDefinitionNames();
-		for(int i=0;i<names.length;i++) {
-			//System.out.println(names[i]);
-		}
-		
 	}
 
 }
