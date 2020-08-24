@@ -50,7 +50,7 @@ public class CacheRetrieve {
 				l.getRequestData().forEach(r->{
 					 is_flag=false;
 					//参数实例化,第一次进来会缓存参数
-					if(r.RequireParamObject().equals(null)){
+					if(r.RequireParamObject()==null){
 						r.InjectParamObject(ReqParamParser(r.getParam()));
 					}
 					if(r.getIs_Disable().equals("false")) {
@@ -58,24 +58,32 @@ public class CacheRetrieve {
 					params.forEach(p->{
 						String[] key=p.get("key");
 						StringBuffer value=new StringBuffer((p.get("value")[0]));
-						StringBuffer jsonvalue=new StringBuffer("");
-						JSONObject itorjson=new JSONObject();
+						StringBuffer lastvalue=new StringBuffer();
 						for(int i=0;i<key.length;i++) {
 							if(json.containsKey(key[i])){
-								itorjson=json.getJSONObject(key[i]);
-								json=itorjson;
+								Object temp=json.get(key[i]);
+								//如果下一个是jsonobject
+								if(temp.getClass().getName().equals(json.getClass().getName())) {
+									json=(JSONObject) temp;
+									
+								}else{
+									lastvalue.append(String.valueOf(temp));
+								}
 							}
 						}
-						if(itorjson.containsKey(key[key.length-1])) {
-							if(String.valueOf(itorjson.get(key[key.length-1])).equals(value)){
+//						System.out.println(lastvalue);
+//						System.out.println(value);
+						
+						if(lastvalue.toString()!=null) {
+							if(lastvalue.toString().equals(value.toString())){
 								is_flag=true;
+								
 							}else {
 								is_flag=false;
 							}
 						}else {
 							is_flag=false;
 						}
-						
 					});
 					if(is_flag) {
 						reqdata=r;
@@ -84,6 +92,8 @@ public class CacheRetrieve {
 				});
 			}
 		});
+	
+
 		return reqdata;
 	}
 	

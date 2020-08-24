@@ -94,7 +94,6 @@ public class RequestUtils {
 					return json;
 				}else {
 					JSONObject json=new JSONObject();
-					json.put("content", content);
 					return json; 
 				}
 			}catch(Exception e) {

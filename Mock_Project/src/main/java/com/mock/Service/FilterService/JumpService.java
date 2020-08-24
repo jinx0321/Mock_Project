@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Enumeration;
 import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.servlet.FilterChain;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import com.mock.Service.CacheService.CacheRetrieve;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.mock.Bean.Data.RequestData;
@@ -53,8 +56,9 @@ public class JumpService {
 	 * @param httpResponse
 	 */
 	public void forward(HttpServletRequest httpRequest,HttpServletResponse httpresponse) {
+		 JSONObject requestdata = null;
 		 try { 
-		     JSONObject requestdata=GetRequestData(httpRequest);
+		      requestdata=GetRequestData(httpRequest);
 		     System.out.println(requestdata.toJSONString());
 		     UrlData urldata=CacheRetrieve.GetUrlData(requestdata.getString("ReqUrl"));
 			 if(urldata!=null) {
@@ -62,23 +66,28 @@ public class JumpService {
 				 RequestData reqdata=CacheRetrieve.GetReqData(requestdata.getString("ReqUrl"), requestdata);
 				 //如果搜索到缓存中的reqdata
 				 if(reqdata!=null) {
-					 if(reqdata.getIs_Forward().equals("true")) {
-						 InjectResponse(reqdata.getData(),httpresponse);
+					 if(reqdata.getProxy()==null) {
+						 InjectResponse(reqdata.getData(),requestdata,httpresponse);
 					 }else{
-						 HttpProxyRequest(); 
+						 if(reqdata.getProxy().getIs_proxy().equals("true")) {
+							 HttpProxyRequest(); 
+						 }else {
+							 InjectResponse(reqdata.getData(),requestdata,httpresponse);
+						 }
+						
 					 }
 					 
 				 }else{
-					 InjectResponse(urldata.getData(),httpresponse);
+					 InjectResponse(urldata.getData(),requestdata,httpresponse);
 				 }
 			 }else {
-					InjectResponse("URL不存在",httpresponse);
+					InjectResponse("URL不存在",requestdata,httpresponse);
 				 HttpProxyRequest();
 			 }
 			
 			//httpRequest.getRequestDispatcher("/mock/data?data="+UrlUtils.UrlParserBefore(httpRequest.getRequestURI())).forward(httpRequest,httpresponse);
 		} catch (Exception e) {
-			InjectResponse("SERVER SRROR",httpresponse);
+			InjectResponse("SERVER_ERROR",requestdata,httpresponse);
 			e.printStackTrace();
 		} 
 	}
@@ -105,8 +114,7 @@ public class JumpService {
 			h.put("value", httpRequest.getHeader(name));
 			headers.add(h);
 		}
-		System.out.println( httpRequest.getCharacterEncoding());
-		
+		//System.out.println( httpRequest.getCharacterEncoding());
 		//取出body编码
 		json.put("CharacterEncoding", httpRequest.getCharacterEncoding());
 		//body数据备份
@@ -115,8 +123,25 @@ public class JumpService {
 	    json.put("Body", new String(reqdata!=null?reqdata:"".getBytes(), httpRequest.getCharacterEncoding()!=null? httpRequest.getCharacterEncoding():"UTF-8") ); 
 	    //设置bodyparam
 	    json.put("BodyParam", RequestUtils.toJsonObject_byte(reqdata, httpRequest.getCharacterEncoding()!=null? httpRequest.getCharacterEncoding():"UTF-8").toJSONString()); 
-	   
+	    //确认行参数
+	    JSONObject BodyParam=JSON.parseObject(json.getString("BodyParam"));
+	    String QueryString=httpRequest.getQueryString()==null?"":httpRequest.getQueryString();
+	    String[] QueryStrings=QueryString.split("&");
+	    JSONObject QueryStringjson=new JSONObject();
+	    for(int i=0;i<QueryStrings.length;i++) {
+	    	QueryStringjson.put(QueryStrings[i].split("=")[0],
+	    			URLDecoder.decode(
+	    					QueryStrings[i].split("=").length>1?QueryStrings[i].split("=")[1]:"",
+	    							httpRequest.getCharacterEncoding()));
 
+	    	BodyParam.put(QueryStrings[i].split("=")[0],
+	    			URLDecoder.decode(
+	    					QueryStrings[i].split("=").length>1?QueryStrings[i].split("=")[1]:"",
+	    							httpRequest.getCharacterEncoding()));
+	    }
+	    json.put("BodyParam", BodyParam.toJSONString());
+	    json.put("QueryString", QueryString);
+	    
 	    return json;
 	}
 
@@ -130,11 +155,16 @@ public class JumpService {
 	/**
 	 * 返回数据注入
 	 */
-	private void InjectResponse(String returndata,HttpServletResponse httpresponse){
+	private void InjectResponse(String returndata,JSONObject requestjson,HttpServletResponse httpresponse){
 		try {
-			httpresponse.getOutputStream().write(returndata.getBytes());
+			if(requestjson!=null) {
+		     httpresponse.setHeader("Content-type", "text/html;charset=UTF-8");
+			 httpresponse.setCharacterEncoding("UTF-8");
+			 httpresponse.getOutputStream().write(returndata.getBytes("UTF-8"));
+			}else {
+				httpresponse.getOutputStream().write(returndata.getBytes("UTF-8"));
+			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

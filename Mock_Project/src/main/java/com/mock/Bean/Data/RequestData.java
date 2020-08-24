@@ -79,10 +79,12 @@ public class RequestData {
 	public void setProxy(Proxy proxy) {
 		Proxy = proxy;
 	}
-	
 	@Override
 	public String toString() {
 		return "RequestData [Param=" + Param + ", Is_Forward=" + Is_Forward + ", Data=" + Data + ", ParamId=" + ParamId
-				+ ", Is_Disable=" + Is_Disable + "]";
-	}	
+				+ ", Is_Disable=" + Is_Disable + ", Proxy=" + Proxy + ", id=" + id + ", ParamObject=" + ParamObject
+				+ "]";
+	}
+	
+	
 }

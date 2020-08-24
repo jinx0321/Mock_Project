@@ -60,10 +60,17 @@
     <UrlData>
         <Data>3123</Data>
         <Request_Data>
-            <Data>1231241</Data>
+            <Data>12312411</Data>
             <Is_Disable>false</Is_Disable>
-            <Param>a=3,b=4,c.d=5</Param>
+            <Param>a.b.c=2;d=4</Param>
             <ParamId>1597905120888</ParamId>
+            <Proxy>
+                <dns>3</dns>
+                <id>32a51887729f43da94b9895fe5ff2f5a</id>
+                <ip>1</ip>
+                <is_proxy>false</is_proxy>
+                <port>2</port>
+            </Proxy>
         </Request_Data>
         <Url>/test</Url>
     </UrlData>
