@@ -43,8 +43,6 @@ public class Mock_Entry {
 		JSONObject json=RequestUtils.toJsonObject(request);
 		System.out.println(json.toJSONString());
 		System.out.println(request.getRequestURI());
-		
-		
 		return UrlDeal.GetUrlData(UrlUtils.UrlParserAfter(request.getParameter("data")));
 	}
 	

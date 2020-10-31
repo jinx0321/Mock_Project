@@ -2,8 +2,11 @@ function Starry(){
 				this.cxt=canvas.getContext("2d");
 				canvas.width=window.innerWidth;
 				canvas.height=window.innerHeight;
+				//div长度宽度
 				this.cW=canvas.width;
 				this.cH=canvas.height;
+				console.log('cW='+this.cW);
+				console.log('cH='+this.cH);
 				this.num=450;
 				this.data=[];
 			}
@@ -34,8 +37,8 @@ function start(){
 				drawLine: function(x1,y1,x2,y2){
 					var cxt=this.cxt;
 					var color=cxt.createLinearGradient(x1,y1,x2,y2);
-					color.addColorStop(0,"yellow");
-					color.addColorStop(1,"green");
+					color.addColorStop(0,"black");
+					color.addColorStop(1,"white");
 					cxt.save();
 					cxt.strokeStyle=color;
 					cxt.beginPath();//开始路径
@@ -52,6 +55,7 @@ function start(){
 					for(var i=0;i<self.num;i++){
 						self.data[i].x+=self.data[i].cX;
 						self.data[i].y+=self.data[i].cY;
+						//边界处理
 						if(self.data[i].x>self.cW||self.data[i].x<0){
 							self.data[i].cX=-self.data[i].cX;
 						}
@@ -62,7 +66,8 @@ function start(){
 						for(var j=i+1;j<self.num;j++){
 							if(Math.pow(self.data[i].x-self.data[j].x,2)
 							+Math.pow(self.data[i].y-self.data[j].y,2)
-							<=50*50){
+							<=30*50){
+								//console.log(self.data[i].x+'-'+self.data[i].y+'-'+self.data[j].x+'-'+self.data[j].y);
 								self.drawLine(self.data[i].x,self.data[i].y,
 									self.data[j].x,self.data[j].y);
 							}
@@ -72,6 +77,7 @@ function start(){
 			}
 	var starry=new Starry();
 	starry.init();
+	//每多少秒执行一次
 	setInterval(function(){starry.moveCircle();},1);
 	
 }

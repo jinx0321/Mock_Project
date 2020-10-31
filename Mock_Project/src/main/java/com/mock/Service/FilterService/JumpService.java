@@ -70,21 +70,18 @@ public class JumpService {
 						 InjectResponse(reqdata.getData(),requestdata,httpresponse);
 					 }else{
 						 if(reqdata.getProxy().getIs_proxy().equals("true")) {
-							 HttpProxyRequest(); 
+							 HttpProxyRequest(requestdata,httpresponse); 
 						 }else {
 							 InjectResponse(reqdata.getData(),requestdata,httpresponse);
 						 }
-						
 					 }
-					 
 				 }else{
 					 InjectResponse(urldata.getData(),requestdata,httpresponse);
 				 }
 			 }else {
 					InjectResponse("URL不存在",requestdata,httpresponse);
-				 HttpProxyRequest();
+				    HttpProxyRequest(requestdata,httpresponse);
 			 }
-			
 			//httpRequest.getRequestDispatcher("/mock/data?data="+UrlUtils.UrlParserBefore(httpRequest.getRequestURI())).forward(httpRequest,httpresponse);
 		} catch (Exception e) {
 			InjectResponse("SERVER_ERROR",requestdata,httpresponse);
@@ -148,7 +145,7 @@ public class JumpService {
 	/**
 	 * http代理请求
 	 */
-	private void HttpProxyRequest() {
+	private void HttpProxyRequest(JSONObject requestdata,HttpServletResponse response) {
 		
 	}
 
